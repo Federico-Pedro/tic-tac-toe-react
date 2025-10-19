@@ -14,7 +14,7 @@ function App() {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0)
   const [board, setBoard] = useState(Array(9).fill(null))
   const [winner, setWinner] = useState(null)
-  let currentPlayer = players[currentPlayerIndex]
+  const currentPlayer = players[currentPlayerIndex]
 
 
   const nextTurn = () => {
@@ -45,7 +45,9 @@ function App() {
   const restart = () => {
     const cleanBoard = Array(9).fill(null)
     setBoard(cleanBoard)
-   
+    setWinner(null)
+    setCurrentPlayerIndex(0)
+    
   }
 
 
@@ -77,7 +79,7 @@ function App() {
 
         <div>
           <h4>
-            {winner ? winner + " GANA LA PARTIDA" : "Turno de: " + currentPlayer.name + " (" + currentPlayer.token + ")"}
+            {winner ? winner + " GANA LA PARTIDA" : "Turno de: " + players[currentPlayerIndex].name + " (" + players[currentPlayerIndex].token + ")"}
           </h4>
 
         </div>
