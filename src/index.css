@@ -34,11 +34,70 @@ body {
   padding-top: 0;
 }
 
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 65%;
+  height: 85%;
+  background-color: rgba(0, 0, 0, 0.877);
+  border: solid 1px #74717160;
+  justify-content: space-between;
+  padding: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99999;
+  border-radius: 12px;
+}
 
+.title {
+  font-size: 4em;
+}
 
-.restart {
+.input-container {
+  display: flex;
+  flex-direction: column;
   width: 50%;
-  font-size: 3rem;
+
+}
+
+.input-name {
+  margin: 15px 25px;
+  width: 100%;
+  font-size: 3em;
+
+}
+
+.input-name input {
+  width: 300px;
+  padding: 10px;
+  font-size: 25px;
+  border: 2px solid #0ff;
+  border-radius: 5px;
+  background-color: #16161696;
+  margin-left: 20px;
+}
+
+.input-name input:focus {
+  outline: none;
+  box-shadow: 0 0 15px #0ff, 0 0 60px #0ff, 0 0 120px #0ff;
+}
+
+
+.modalButtonContainer {
+  margin: 0 auto 25px auto;
+  width: 50%;
+}
+
+
+
+.restart,
+.modalButton {
+  width: 40%;
+  font-size: 2rem;
   font-weight: 900;
   color: #fff;
   padding: 15px 30px;
@@ -79,7 +138,8 @@ body {
   transform: scale(0.95);
 }
 
-h4 {
+h4,
+.input-name {
   text-shadow: 0 0 10px #fff,
     0 0 20px #fff,
     0 0 30px #ff00ff,
