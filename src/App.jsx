@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
+import Modal from './Modal.jsx'
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0)
   const [board, setBoard] = useState(Array(9).fill(null))
   const [winner, setWinner] = useState(null)
+  const [isDraw, setIsDraw] = useState(null)
   const [showmodal, setShowModal] = useState(true)
   const currentPlayer = players[currentPlayerIndex]
 
@@ -37,10 +39,12 @@ function App() {
     newBoard[index] = currentPlayer.token
     setBoard(newBoard)
     const isWinner = checkWinner(newBoard)
-
+    const isDraw = checkDraw(newBoard)
     if (isWinner) {
       setWinner(isWinner)
-      console.log(winner + " GANA LA PARTIDA")
+      return
+    } else if (isDraw) {
+      setIsDraw(isDraw)
       return
     }
 
@@ -53,100 +57,84 @@ function App() {
     const cleanBoard = Array(9).fill(null)
     setBoard(cleanBoard)
     setWinner(null)
+    setIsDraw(null)
     setCurrentPlayerIndex(0)
 
   }
 
 
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
 
-  const checkWinner = (board) => {
-    const winPossibilities = [
-      (board[0] !== null && board[0] === board[1] && board[1] === board[2]),
-      (board[3] !== null && board[3] === board[4] && board[4] === board[5]),
-      (board[6] !== null && board[6] === board[7] && board[7] === board[8]),
-      (board[0] !== null && board[0] === board[3] && board[3] === board[6]),
-      (board[1] !== null && board[1] === board[4] && board[4] === board[7]),
-      (board[2] !== null && board[2] === board[5] && board[5] === board[8]),
-      (board[0] !== null && board[0] === board[4] && board[4] === board[8]),
-      (board[2] !== null && board[2] === board[4] && board[4] === board[6])
-    ]
 
-    const hasWinner = winPossibilities.some(w => w)
+  const checkDraw = (board) => {
+    const isDrawInevitable = lines.every(([a, b, c]) => {
+      const lineValues = [board[a], board[b], board[c]].filter(v => v !== null);
+      const hasX = lineValues.includes('X');
+      const hasO = lineValues.includes('O');
+      return hasX && hasO;
+    });
 
-    if (hasWinner) {
-      return currentPlayer.name
+    if (isDrawInevitable) {
+      return "EMPATE";
     }
 
+    return null;
+  }
+
+
+
+  const checkWinner = (board) => {
+    for (const [a, b, c] of lines) {
+      if (board[a] !== null && board[a] === board[b] && board[b] === board[c]) {
+        return currentPlayer.name
+      }
+    }
     return null
   }
 
   return (
     <>
-      {showmodal ? (
-
-        <div className='modal'>
-          <h4 className="title">
-            Bienvenidos al TA-TE-TI
+    //mostrar modal de ganador o de empate dependiendo de esos estados
+      {showmodal ? <Modal start={startGame} /> : (<div className='main-container'>
+        <div>
+          <h4>
+            {winner ? winner + " GANA LA PARTIDA" : (isDraw ? isDraw : "Turno de: " + players[currentPlayerIndex].name + " (" + players[currentPlayerIndex].token + ")")}
           </h4>
-          <div className="input-container">
-            <label className="input-name" htmlFor="player1"> Jugador 1:
-              <input type="text" name="player1" placeholder="Player 1"
-                onChange={(e) => {
-                  const newPlayers = [...players] 
-                  newPlayers[0].name = e.target.value  
-                  setPlayers(newPlayers) 
-                }} />
-            </label>
-            <label className="input-name" htmlFor="player2"> Jugador 2:
-              <input type="text" name="player2" placeholder="Player 2"
-                onChange={(e) => {
-                  const newPlayers = [...players] 
-                  newPlayers[1].name = e.target.value  
-                  setPlayers(newPlayers) 
-                }} />
-            </label>
-          </div>
-          <div className='modalButtonContainer'>
-            <button className='modalButton' onClick={() => startGame()}>Comenzar</button>
-          </div>
-        </div>
-      ) : (
-
-
-
-
-        <div className='main-container'>
-          <div>
-            <h4>
-              {winner ? winner + " GANA LA PARTIDA" : "Turno de: " + players[currentPlayerIndex].name + " (" + players[currentPlayerIndex].token + ")"}
-            </h4>
-
-          </div>
-
-          <div className='container'>
-
-            <div className='board-container'>
-
-              {board.map((value, index) => (
-                <button
-                  className='box'
-                  disabled={(value !== null) || winner}
-                  key={index}
-                  onClick={() => handleClick(index)}
-                >
-                  {value}
-                </button>
-              ))}
-            </div>
-          </div>
-          <button className='restart'
-            onClick={() => restart()}
-          >
-            Reiniciar
-          </button>
 
         </div>
-      )}
+
+        <div className='container'>
+
+          <div className='board-container'>
+
+            {board.map((value, index) => (
+              <button
+                className='box'
+                disabled={(value !== null) || winner || isDraw}
+                key={index}
+                onClick={() => handleClick(index)}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+        </div>
+        <button className='restart'
+          onClick={() => restart()}
+        >
+          Reiniciar
+        </button>
+
+      </div>)}
 
     </>
   )
