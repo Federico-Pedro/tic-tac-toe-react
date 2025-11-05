@@ -7,8 +7,8 @@ function App() {
 
   const [players, setPlayers] = useState(
     [
-      { name: 'PLAYER 1', token: 'X' },
-      { name: 'PLAYER 2', token: 'O' }
+      { name: 'PLAYER 1', token: 'X', score: 0 },
+      { name: 'PLAYER 2', token: 'O', score: 0 }
     ]
   )
 
@@ -42,6 +42,12 @@ function App() {
     const isDraw = checkDraw(newBoard)
     if (isWinner) {
       setWinner(isWinner)
+
+      // Cambia el valor del score del jugador que gana
+      const newScore = [...players]
+      newScore[currentPlayerIndex].score += 1
+      setPlayers(newScore)
+      console.log(players)
       return
     } else if (isDraw) {
       setIsDraw(isDraw)
@@ -53,14 +59,29 @@ function App() {
 
 
 
-  const restart = () => {
+  const newMatch = () => {
     const cleanBoard = Array(9).fill(null)
     setBoard(cleanBoard)
     setWinner(null)
     setIsDraw(null)
     setCurrentPlayerIndex(0)
-
   }
+
+   const restart = () => {
+    const cleanBoard = Array(9).fill(null)
+    setBoard(cleanBoard)
+    setWinner(null)
+    setIsDraw(null)
+    setCurrentPlayerIndex(0)
+    setPlayers(prevPlayers => {
+        const newPlayers = [...prevPlayers];
+        newPlayers[0].score = 0;
+        newPlayers[1].score = 0;
+        return newPlayers;
+      });
+  }
+
+
 
 
   const lines = [
@@ -95,6 +116,7 @@ function App() {
   const checkWinner = (board) => {
     for (const [a, b, c] of lines) {
       if (board[a] !== null && board[a] === board[b] && board[b] === board[c]) {
+
         return currentPlayer.name
       }
     }
@@ -103,38 +125,53 @@ function App() {
 
   return (
     <>
-    //mostrar modal de ganador o de empate dependiendo de esos estados
-      {showmodal ? <Modal start={startGame} /> : (<div className='main-container'>
-        <div>
-          <h4>
-            {winner ? winner + " GANA LA PARTIDA" : (isDraw ? isDraw : "Turno de: " + players[currentPlayerIndex].name + " (" + players[currentPlayerIndex].token + ")")}
-          </h4>
 
-        </div>
+      {showmodal ? <Modal start={startGame}
+        players={players}
+        setPlayers={setPlayers}
 
-        <div className='container'>
-
-          <div className='board-container'>
-
-            {board.map((value, index) => (
-              <button
-                className='box'
-                disabled={(value !== null) || winner || isDraw}
-                key={index}
-                onClick={() => handleClick(index)}
-              >
-                {value}
-              </button>
-            ))}
+      /> :
+        (<div className='main-container'>
+          <div>
+            <h4>
+              {winner ? winner + " GANA LA PARTIDA" : (isDraw ? isDraw : "Turno de: " + players[currentPlayerIndex].name + " (" + players[currentPlayerIndex].token + ")")}
+            </h4>
+            <h6 className="score">
+              {players[0].name} : {players[0].score} - {players[1].name} : {players[1].score}
+            </h6>
           </div>
-        </div>
-        <button className='restart'
-          onClick={() => restart()}
-        >
-          Reiniciar
-        </button>
 
-      </div>)}
+          <div className='container'>
+
+            <div className='board-container'>
+
+              {board.map((value, index) => (
+                <button
+                  className='box'
+                  disabled={(value !== null) || winner || isDraw}
+                  key={index}
+                  onClick={() => handleClick(index)}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="button-container">
+
+            <button className='restart'
+              onClick={() => newMatch()}
+            >
+              Nueva Partida
+            </button>
+            <button className='restart'
+              onClick={() => restart()}
+            >
+              Reiniciar
+            </button>
+          </div>
+
+        </div>)}
 
     </>
   )

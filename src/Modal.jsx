@@ -1,6 +1,6 @@
 
 
-const Modal = ({start}) => {
+const Modal = ({start, players, setPlayers}) => {
     return (<div className='modal'>
       <h4 className="title">
         Bienvenidos al TA-TE-TI
