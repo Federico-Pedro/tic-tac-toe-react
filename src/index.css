@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 :root {
   font-family: monospace;
   line-height: 1.5;
@@ -21,7 +24,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url(./assets/back.avif);
+  background-image: url(./assets/01.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -57,6 +60,7 @@ body {
 
 .title {
   font-size: 4em;
+  font-family: 'Electrolize', sans-serif;
 }
 
 .input-container {
@@ -68,6 +72,7 @@ body {
 }
 
 .input-name {
+  font-family: 'Audiowide', sans-serif;
   margin: 15px 25px;
   width: 100%;
   font-size: 3em;
@@ -78,6 +83,7 @@ body {
   width: 70%;
   min-width: 300px;
   padding: 10px;
+  font-family: 'Audiowide', sans-serif;
   font-size: 25px;
   border: 2px solid #0ff;
   border-radius: 5px;
@@ -106,6 +112,7 @@ body {
   width: 220px;
   font-size: 1.5rem;
   font-weight: 900;
+  font-family: 'Audiowide', sans-serif;
   color: #fff;
   padding: 15px 30px;
   margin-top: 30px;
@@ -163,7 +170,8 @@ h4:hover {
 }
 
 .score {
-  font-size: 16px;
+  font-size: 20px;
+  font-family: 'Audiowide', sans-serif;
   color: #ffef62;
   text-shadow: 0 0 10px #fff,
     0 0 20px #fff,
@@ -198,8 +206,9 @@ h4:hover {
 
 
 h4 {
-  font-size: 2.8em;
+  font-size: 2em;
   line-height: 1.1;
+  font-family: 'Audiowide', sans-serif;
 }
 
 .box {
@@ -208,8 +217,8 @@ h4 {
   height: 150px;
   color: #ffef62;
   font-size: 7em;
-  font-weight: 900;
-  font-family: inherit;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
   background-color: #24242498;
   cursor: pointer;
   transition: all 0.35s ease-in-out;
@@ -217,8 +226,26 @@ h4 {
     0 0 20px #ea00ff,
     0 0 30px #ffef62,
     0 0 40px #ffef62;
-
 }
+
+.winning-box {
+  border: 2px solid #093a42;
+  width: 150px;
+  height: 150px;
+  color: #ff00ff;
+  font-size: 7em;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  background-color: #24242498;
+  cursor: pointer;
+  transition: all 0.35s ease-in-out;
+  text-shadow: 0 0 10px #00ffff,
+    0 0 20px #00ffff,
+    0 0 30px #ff00ff,
+    0 0 40px #ff00ff;
+}
+
+
 
 .box:hover {
   background: transparent;
@@ -270,7 +297,7 @@ h4 {
   }
 
   .container {
-  width: 100%;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;

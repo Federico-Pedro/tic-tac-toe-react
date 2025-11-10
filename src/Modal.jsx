@@ -1,6 +1,21 @@
+import {validatePlayers} from './script.js'
+import {useState} from 'react'
 
 
 const Modal = ({start, players, setPlayers}) => {
+
+  const [error, setError] = useState(null)
+  const handleStart = () => {
+    const validation = validatePlayers(players)
+    if (!validation.valid){
+      setError(validation.error)
+      console.log(error)
+      return
+    } 
+    setError(null)
+    start()
+  }
+
     return (<div className='modal'>
       <h4 className="title">
         Bienvenidos al TA-TE-TI
@@ -23,8 +38,9 @@ const Modal = ({start, players, setPlayers}) => {
             }} />
         </label>
       </div>
+      {error && <p style={{ color: '#ff0040' }}>{error}</p>}
       <div className='modalButtonContainer'>
-        <button className='modalButton' onClick={start}>Comenzar</button>
+        <button className='modalButton' onClick={handleStart}>Comenzar</button>
       </div>
     </div>)
 }

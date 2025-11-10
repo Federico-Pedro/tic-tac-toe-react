@@ -7,8 +7,8 @@ function App() {
 
   const [players, setPlayers] = useState(
     [
-      { name: 'PLAYER 1', token: 'X', score: 0 },
-      { name: 'PLAYER 2', token: 'O', score: 0 }
+      { name: '', token: 'X', score: 0 },
+      { name: '', token: 'O', score: 0 }
     ]
   )
 
@@ -18,6 +18,7 @@ function App() {
   const [winner, setWinner] = useState(null)
   const [isDraw, setIsDraw] = useState(null)
   const [showmodal, setShowModal] = useState(true)
+  const [winningLine, setWinningLine] = useState(null)
   const currentPlayer = players[currentPlayerIndex]
 
 
@@ -34,28 +35,31 @@ function App() {
 
 
   const handleClick = (index) => {
-    console.log('Click en casilla', index)
-    const newBoard = [...board]
-    newBoard[index] = currentPlayer.token
-    setBoard(newBoard)
-    const isWinner = checkWinner(newBoard)
-    const isDraw = checkDraw(newBoard)
-    if (isWinner) {
-      setWinner(isWinner)
-
-      // Cambia el valor del score del jugador que gana
-      const newScore = [...players]
-      newScore[currentPlayerIndex].score += 1
-      setPlayers(newScore)
-      console.log(players)
-      return
-    } else if (isDraw) {
-      setIsDraw(isDraw)
-      return
-    }
-
-    nextTurn()
+  console.log('Click en casilla', index)
+  const newBoard = [...board]
+  newBoard[index] = currentPlayer.token
+  setBoard(newBoard)
+  
+  const result = checkWinner(newBoard)  
+  const drawResult = checkDraw(newBoard)
+  
+  if (result) {
+    setWinner(result.winner)
+    setWinningLine(result.winningLine)  
+    
+    
+    const newScore = [...players]
+    newScore[currentPlayerIndex].score += 1
+    setPlayers(newScore)
+    console.log(players)
+    return
+  } else if (drawResult) {
+    setIsDraw(drawResult)
+    return
   }
+
+  nextTurn()  
+}
 
 
 
@@ -65,20 +69,22 @@ function App() {
     setWinner(null)
     setIsDraw(null)
     setCurrentPlayerIndex(0)
+    setWinningLine(null)
   }
 
-   const restart = () => {
+  const restart = () => {
     const cleanBoard = Array(9).fill(null)
     setBoard(cleanBoard)
     setWinner(null)
     setIsDraw(null)
     setCurrentPlayerIndex(0)
+    setWinningLine(null)
     setPlayers(prevPlayers => {
-        const newPlayers = [...prevPlayers];
-        newPlayers[0].score = 0;
-        newPlayers[1].score = 0;
-        return newPlayers;
-      });
+      const newPlayers = [...prevPlayers];
+      newPlayers[0].score = 0;
+      newPlayers[1].score = 0;
+      return newPlayers;
+    });
   }
 
 
@@ -114,10 +120,14 @@ function App() {
 
 
   const checkWinner = (board) => {
-    for (const [a, b, c] of lines) {
+    for (const line of lines) {
+      const [a, b, c] = line;
       if (board[a] !== null && board[a] === board[b] && board[b] === board[c]) {
 
-        return currentPlayer.name
+        return {
+          winner: currentPlayer.name,
+          winningLine: line
+        }
       }
     }
     return null
@@ -147,10 +157,11 @@ function App() {
 
               {board.map((value, index) => (
                 <button
-                  className='box'
+                  className={winningLine?.includes(index) ? "winning-box" : isDraw ? "winning-box" : "box"}
                   disabled={(value !== null) || winner || isDraw}
                   key={index}
                   onClick={() => handleClick(index)}
+                  
                 >
                   {value}
                 </button>
